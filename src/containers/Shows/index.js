@@ -1,7 +1,7 @@
 import "whatwg-fetch";
 import { useState, useEffect } from "react";
-import ShowRow from "../../components/ShowRow";
 import Loader from "../../components/Loader";
+import ShowTable from "../../components/ShowTable";
 
 async function getShows(search, page = 1) {
   const results = await (
@@ -56,20 +56,7 @@ function Shows() {
       {isSearching === true && <Loader />}
 
       {isSearching === false && shows.length !== 0 && (
-        <table>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Status</td>
-              <td>Premier Date</td>
-            </tr>
-          </thead>
-          <tbody>
-            {shows.map((result) => (
-              <ShowRow key={result.show.id} show={result.show} />
-            ))}
-          </tbody>
-        </table>
+        <ShowTable shows={shows} />
       )}
     </form>
   );
