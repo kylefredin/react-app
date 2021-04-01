@@ -1,6 +1,7 @@
 import "whatwg-fetch";
 import { useState, useEffect } from "react";
 import ShowRow from "../../components/ShowRow";
+import Loader from "../../components/Loader";
 
 async function getShows(search, page = 1) {
   const results = await (
@@ -13,7 +14,7 @@ async function getShows(search, page = 1) {
 function Shows() {
   const [shows, setShows] = useState([]);
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("Vikings");
+  const [search, setSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   const onPageChange = ({ target }) => {
@@ -44,20 +45,32 @@ function Shows() {
         <input type="number" id="page" value={page} onChange={onPageChange} />
       </label>
 
-      <table>
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Status</td>
-            <td>Premier Date</td>
-          </tr>
-        </thead>
-        <tbody>
-          {shows.map((result) => (
-            <ShowRow key={result.show.id} show={result.show} />
-          ))}
-        </tbody>
-      </table>
+      {isSearching === false && shows.length === 0 && search.trim() === "" && (
+        <p>Please enter a search term</p>
+      )}
+
+      {isSearching === false && shows.length === 0 && search.trim() !== "" && (
+        <p>No shows found</p>
+      )}
+
+      {isSearching === true && <Loader />}
+
+      {isSearching === false && shows.length !== 0 && (
+        <table>
+          <thead>
+            <tr>
+              <td>Name</td>
+              <td>Status</td>
+              <td>Premier Date</td>
+            </tr>
+          </thead>
+          <tbody>
+            {shows.map((result) => (
+              <ShowRow key={result.show.id} show={result.show} />
+            ))}
+          </tbody>
+        </table>
+      )}
     </form>
   );
 }
